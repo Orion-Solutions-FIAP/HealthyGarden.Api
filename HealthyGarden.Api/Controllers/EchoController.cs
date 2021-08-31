@@ -6,6 +6,7 @@ namespace HealthyGarden.Api.Controllers
     [ApiController]
     public class EchoController : ControllerBase
     {
+        [HttpGet]
         public IActionResult Get()
         {
             return Ok("It's running =D !!");
