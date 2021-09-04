@@ -1,6 +1,5 @@
 ﻿using System;
-
-namespace HealthyGarden.Api.Models
+namespace HealthyGarden.Domain.Entities
 {
     public class Historic
     {

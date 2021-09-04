@@ -1,4 +1,4 @@
-﻿namespace HealthyGarden.Api.Models.Enum
+﻿namespace HealthyGarden.Domain.Entities.Enum
 {
     public enum Category
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using HealthyGarden.Api.Models;
+using HealthyGarden.Domain.Entities;
 
 namespace HealthyGarden.Api.Controllers
 {
@@ -15,7 +15,7 @@ namespace HealthyGarden.Api.Controllers
 
         [HttpGet]
         [Route("{Id}")]
-        public IActionResult Get(int Id)
+        public IActionResult Get(int id)
         {
             return Ok();
         }
@@ -36,6 +36,7 @@ namespace HealthyGarden.Api.Controllers
         [Route("historic")]
         public IActionResult GetHistoric()
         {
+            //Adicionar Cache
             return Ok();
         }
     }

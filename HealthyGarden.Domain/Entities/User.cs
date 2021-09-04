@@ -1,4 +1,6 @@
-﻿namespace HealthyGarden.Api.Models
+﻿using System.Text.Json.Serialization;
+
+namespace HealthyGarden.Domain.Entities
 {
     public class User
     {
@@ -6,6 +8,5 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        //public string HashCode { get; set; }
     }
 }

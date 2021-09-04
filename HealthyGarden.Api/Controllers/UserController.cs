@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using HealthyGarden.Api.Models;
+using HealthyGarden.Domain.Entities;
+using HealthyGarden.Domain.Interfaces;
 
 namespace HealthyGarden.Api.Controllers
 {
@@ -7,23 +8,37 @@ namespace HealthyGarden.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserRepository _userRepository;
+
+        public UserController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
             return Ok();
         }
-        
+
+        [HttpGet]
+        [Route("number")]
+        public IActionResult GetNumberOfUsers()
+        {
+            return Ok(new { NumberOfUsers = _userRepository.GetNumberOfUsers()});
+        }
+
         [HttpGet]
         [Route("{Id}")]
-        public IActionResult Get(int Id)
+        public IActionResult Get(int id)
         {
-            return Ok();
+            return Ok(_userRepository.GetById(id));
         }
 
         [HttpPost]
         public IActionResult Create(User user)
         {
-            return Ok();
+            return Ok(_userRepository.Insert(user));
         }
 
         [HttpPut]
