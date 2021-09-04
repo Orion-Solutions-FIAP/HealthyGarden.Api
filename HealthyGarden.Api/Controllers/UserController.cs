@@ -28,8 +28,7 @@ namespace HealthyGarden.Api.Controllers
             return Ok(new { NumberOfUsers = _userRepository.GetNumberOfUsers()});
         }
 
-        [HttpGet]
-        [Route("{Id}")]
+        [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
             return Ok(_userRepository.GetById(id));
