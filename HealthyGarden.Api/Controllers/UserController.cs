@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using HealthyGarden.Domain.Entities;
 using HealthyGarden.Domain.Interfaces;
 
@@ -31,7 +32,17 @@ namespace HealthyGarden.Api.Controllers
         [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
-            return Ok(_userRepository.GetById(id));
+            try
+            {
+                var user = _userRepository.GetById(id);
+                if (user == null)
+                    return NotFound(new {Message = "Usuário não encontrado"});
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {e.Message});
+            }
         }
 
         [HttpPost]
@@ -43,7 +54,7 @@ namespace HealthyGarden.Api.Controllers
         [HttpPut]
         public IActionResult Update(User user)
         {
-            return Ok();
+            return Ok(_userRepository.Update(user));
         }
     }
 }

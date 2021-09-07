@@ -1,11 +1,8 @@
 ﻿using HealthyGarden.Domain.Entities;
-
 namespace HealthyGarden.Domain.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepositoryBase<User>
     {
-        User Insert(User user);
-        User GetById(int id);
         int GetNumberOfUsers();
     }
 }

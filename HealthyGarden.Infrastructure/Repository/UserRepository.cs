@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using Dapper;
 using HealthyGarden.Domain.Entities;
@@ -27,8 +28,7 @@ namespace HealthyGarden.Infrastructure.Repository
                 parameter.Add("Email", user.Email, DbType.AnsiString,size:60);
                 parameter.Add("Password", user.Name, DbType.AnsiString, size: 40);
                 parameter.Add("NewId",dbType:DbType.Int32, direction:ParameterDirection.Output);
-
-                connection.Execute("HG_InsertUser", parameter, commandType: CommandType.StoredProcedure);
+                connection.Execute("p_HG_InsertUser", parameter, commandType: CommandType.StoredProcedure);
                 user.Id = parameter.Get<int>("NewId");
                 user.Password = null;
                 return user;
@@ -40,17 +40,11 @@ namespace HealthyGarden.Infrastructure.Repository
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var parameter = new DynamicParameters();
-                parameter.Add("Id", id);
-                parameter.Add("Name", dbType:DbType.AnsiString, direction: ParameterDirection.Output,size:40);
-                parameter.Add("Email", dbType: DbType.AnsiString, direction: ParameterDirection.Output, size: 60);
-                // return connection.QueryFirstOrDefault<User>("HG_GetUserById", new{Id = id}, commandType: CommandType.StoredProcedure);
-                connection.Execute("HG_GetUserById", parameter, commandType: CommandType.StoredProcedure);
-                return new User
-                {
-                    Name = parameter.Get<string>("Name"),
-                    Email = parameter.Get<string>("Email")
-                };
+                var user = connection.QueryFirstOrDefault<User>("p_HG_GetUserByID", new { Id = id }, commandType: CommandType.StoredProcedure);
+                if (user == null) return null;
+                user.Password = null;
+                user.Id = id;
+                return user;
             }
         }
 
@@ -59,8 +53,24 @@ namespace HealthyGarden.Infrastructure.Repository
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.QueryFirstOrDefault<int>("SELECT dbo.CONTA_LINHAS('user')", commandType: CommandType.Text);
+                return connection.QueryFirstOrDefault<int>("SELECT dbo.Fn_HG_ContaLinhas('user')", commandType: CommandType.Text);
             }
+        }
+
+        public User Update(User user)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.Execute("p_HG_UpdateUserByID", new { user.Id, user.Name, user.Email, user.Password},
+                    commandType: CommandType.StoredProcedure);
+                return user;
+            }
+        }
+
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
