@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HealthyGarden.Api.Constants;
+using Microsoft.AspNetCore.Mvc;
 using HealthyGarden.Domain.Entities;
+using HealthyGarden.Domain.Interfaces;
 
 namespace HealthyGarden.Api.Controllers
 {
@@ -7,28 +9,49 @@ namespace HealthyGarden.Api.Controllers
     [ApiController]
     public class GardenController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IGardenRepository _gardenRepository;
+
+        public GardenController(IGardenRepository gardenRepository)
         {
-            return Ok();
+            _gardenRepository = gardenRepository;
         }
 
-        [HttpGet]
-        [Route("{Id}")]
+        [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
-            return Ok();
+            if (id <= 0)
+                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+            var garden = _gardenRepository.GetById(id);
+            if (garden == null)
+                return NotFound(new { Message = ReturnMessage.GardenNotFound });
+            return Ok(garden);
         }
 
         [HttpPost]
         public IActionResult Create(Garden garden)
         {
-            return Ok();
+            var newGarden = _gardenRepository.Insert(garden);
+            return CreatedAtAction("Get", new { newGarden.Id }, newGarden);
         }
 
         [HttpPut]
         public IActionResult Update(Garden garden)
         {
+            if (garden.Id <= 0)
+                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+            if (_gardenRepository.GetById(garden.Id) == null)
+                return NotFound(new { Message = ReturnMessage.GardenNotFound });
+            return Ok(_gardenRepository.Update(garden));
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (id <= 0)
+                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+            if (_gardenRepository.GetById(id) == null)
+                return NotFound(new { Message = ReturnMessage.GardenNotFound });
+            _gardenRepository.Delete(id);
             return Ok();
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using HealthyGarden.Api.Constants;
 using Microsoft.AspNetCore.Mvc;
 using HealthyGarden.Domain.Entities;
 using HealthyGarden.Domain.Interfaces;
@@ -17,44 +17,49 @@ namespace HealthyGarden.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok();
-        }
-
-        [HttpGet]
         [Route("number")]
         public IActionResult GetNumberOfUsers()
         {
-            return Ok(new { NumberOfUsers = _userRepository.GetNumberOfUsers()});
+            return Ok(new { NumberOfUsers = _userRepository.GetNumberOfUsers() });
         }
 
         [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
-            try
-            {
-                var user = _userRepository.GetById(id);
-                if (user == null)
-                    return NotFound(new {Message = "Usuário não encontrado"});
-                return Ok(user);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new {e.Message});
-            }
+            if (id <= 0)
+                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+            var user = _userRepository.GetById(id);
+            if (user == null)
+                return NotFound(new { Message = ReturnMessage.UserNotFound });
+            return Ok(user);
         }
 
         [HttpPost]
         public IActionResult Create(User user)
         {
-            return Ok(_userRepository.Insert(user));
+            var newUser = _userRepository.Insert(user);
+            return CreatedAtAction("Get", new { newUser.Id }, newUser);
         }
 
         [HttpPut]
         public IActionResult Update(User user)
         {
+            if (user.Id <= 0)
+                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+            if (_userRepository.GetById(user.Id) == null)
+                return NotFound(new { Message = ReturnMessage.UserNotFound });
             return Ok(_userRepository.Update(user));
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (id <= 0)
+                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+            if (_userRepository.GetById(id) == null)
+                return NotFound(new { Message = ReturnMessage.UserNotFound });
+            _userRepository.Delete(id);
+            return Ok();
         }
     }
 }

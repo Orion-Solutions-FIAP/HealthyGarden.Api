@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using Dapper;
 using HealthyGarden.Domain.Entities;
@@ -18,20 +17,20 @@ namespace HealthyGarden.Infrastructure.Repository
             _connectionString = options.Value.ConnectionSqlServer;
         }
 
-        public User Insert(User user)
+        public User Insert(User entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var parameter = new DynamicParameters();
-                parameter.Add("Name",user.Name, DbType.AnsiString,size:40);
-                parameter.Add("Email", user.Email, DbType.AnsiString,size:60);
-                parameter.Add("Password", user.Name, DbType.AnsiString, size: 40);
+                parameter.Add("Name",entity.Name, DbType.AnsiString,size:40);
+                parameter.Add("Email", entity.Email, DbType.AnsiString,size:60);
+                parameter.Add("Password", entity.Password, DbType.AnsiString, size: 40);
                 parameter.Add("NewId",dbType:DbType.Int32, direction:ParameterDirection.Output);
                 connection.Execute("p_HG_InsertUser", parameter, commandType: CommandType.StoredProcedure);
-                user.Id = parameter.Get<int>("NewId");
-                user.Password = null;
-                return user;
+                entity.Id = parameter.Get<int>("NewId");
+                entity.Password = null;
+                return entity;
             }
         }
 
@@ -43,7 +42,6 @@ namespace HealthyGarden.Infrastructure.Repository
                 var user = connection.QueryFirstOrDefault<User>("p_HG_GetUserByID", new { Id = id }, commandType: CommandType.StoredProcedure);
                 if (user == null) return null;
                 user.Password = null;
-                user.Id = id;
                 return user;
             }
         }
@@ -53,24 +51,28 @@ namespace HealthyGarden.Infrastructure.Repository
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.QueryFirstOrDefault<int>("SELECT dbo.Fn_HG_ContaLinhas('user')", commandType: CommandType.Text);
+                return connection.QueryFirstOrDefault<int>("SELECT dbo.Fn_HG_ContaLinhas('entity')", commandType: CommandType.Text);
             }
         }
 
-        public User Update(User user)
+        public User Update(User entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute("p_HG_UpdateUserByID", new { user.Id, user.Name, user.Email, user.Password},
+                connection.Execute("p_HG_UpdateUserByID", new { entity.Id, entity.Name, entity.Email, entity.Password},
                     commandType: CommandType.StoredProcedure);
-                return user;
+                return entity;
             }
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.Execute("p_HG_DeleteUserByID", new { Id = id }, commandType: CommandType.StoredProcedure);
+            }
         }
     }
 }
