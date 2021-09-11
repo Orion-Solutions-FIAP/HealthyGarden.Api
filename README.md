@@ -29,7 +29,7 @@ Efetuamos a conexão com um banco **SQL Server** em nuvem, e utilizamos o ORM **
 
 ## Detalhes do projeto 📝
 No link a seguir é possível acessar um documento mais detalhado sobre o nosso projeto:
-<br/>[🔗Project Doc](/Doc/Project_Document.pdf)
+<br/>[🔗Project Doc](/Documents/Project_Document.pdf)
 
 
 ## Desenvolvedores 👨‍💻🟣
