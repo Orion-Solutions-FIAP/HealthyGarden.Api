@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using HealthyGarden.Api.Middlewares;
 using HealthyGarden.Domain.Interfaces;
 using HealthyGarden.Infrastructure.Configurations;
@@ -30,6 +33,10 @@ namespace HealthyGarden.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HealthyGarden.Api", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
@@ -41,24 +48,23 @@ namespace HealthyGarden.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger(c => {
-                    c.SerializeAsV2 = true;
-                });
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HealthyGarden.Api v1");
-                    c.RoutePrefix = string.Empty;
-                });
-            }
+
+            app.UseSwagger(c => {
+                c.SerializeAsV2 = true;
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HealthyGarden.Api v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
-#if !DEBUG
+
             app.UseMiddleware(typeof(ExceptionHandlerMiddleware));
-#endif
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

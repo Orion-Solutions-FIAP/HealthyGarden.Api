@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using HealthyGarden.Domain.Entities.Enum;
 
 namespace HealthyGarden.Domain.Entities
 {
@@ -8,9 +9,9 @@ namespace HealthyGarden.Domain.Entities
     {
         public int Id { get; set; }
         [Required]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         [Required]
-        public int StatusId { get; set; }
+        public Status StatusId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

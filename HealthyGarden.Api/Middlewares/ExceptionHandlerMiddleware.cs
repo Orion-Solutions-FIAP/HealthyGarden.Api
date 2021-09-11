@@ -31,7 +31,7 @@ namespace HealthyGarden.Api.Middlewares
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(new { erro = new { mensagem = "Ocorreu um erro interno", status = "500" } }));
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new { Error = new { exception.Message, Status = "500" } }));
         }
     }
 }

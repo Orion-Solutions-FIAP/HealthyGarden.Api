@@ -2,9 +2,11 @@
 {
     public static class ReturnMessage
     {
-        public static string UserNotFound => "User not found";
-        public static string GardenNotFound => "Garden not found";
-        public static string SettingNotFound => "Setting not found";
-        public static string IdIsMandatory => "Id is mandatory";
+        public static object UserNotFound => new { Message = "User not found" };
+        public static object GardenNotFound => new { Message = "Garden not found" };
+        public static object SettingNotFound => new { Message = "Setting not found" };
+        public static object IdIsMandatory => new { Message = "Id is mandatory" };
+        public static object StatusNotExist => new { Message = "Status does not exist" };
+        public static object SuccessfullyDeleted => new { Message = "Successfully deleted" };
     }
 }

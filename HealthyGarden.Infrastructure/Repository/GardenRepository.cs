@@ -49,7 +49,8 @@ namespace HealthyGarden.Infrastructure.Repository
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute("p_HG_UpdateGardenByID", new { entity.Id, entity.Name, entity.Description });
+                connection.Execute("p_HG_UpdateGardenByID", new { entity.Id, entity.StatusId, entity.Name, entity.Description }, 
+                    commandType: CommandType.StoredProcedure);
                 return entity;
             }
         }

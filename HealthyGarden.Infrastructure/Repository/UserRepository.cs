@@ -51,7 +51,7 @@ namespace HealthyGarden.Infrastructure.Repository
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.QueryFirstOrDefault<int>("SELECT dbo.Fn_HG_ContaLinhas('entity')", commandType: CommandType.Text);
+                return connection.QueryFirstOrDefault<int>("SELECT dbo.Fn_HG_ContaLinhas('user')", commandType: CommandType.Text);
             }
         }
 
@@ -62,6 +62,7 @@ namespace HealthyGarden.Infrastructure.Repository
                 connection.Open();
                 connection.Execute("p_HG_UpdateUserByID", new { entity.Id, entity.Name, entity.Email, entity.Password},
                     commandType: CommandType.StoredProcedure);
+                entity.Password = null;
                 return entity;
             }
         }

@@ -20,10 +20,10 @@ namespace HealthyGarden.Api.Controllers
         public IActionResult Get(int id)
         {
             if (id <= 0)
-                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+                return BadRequest(ReturnMessage.IdIsMandatory);
             var setting = _settingRepository.GetById(id);
             if (setting == null)
-                return NotFound(new { Message = ReturnMessage.SettingNotFound });
+                return NotFound(ReturnMessage.SettingNotFound);
             return Ok(setting);
         }
 
@@ -31,16 +31,16 @@ namespace HealthyGarden.Api.Controllers
         public IActionResult Create(Setting setting)
         {
             var newSetting = _settingRepository.Insert(setting);
-            return CreatedAtAction("Get", new { newSetting.GardenId }, newSetting);
+            return CreatedAtAction("Get", new { Id = newSetting.GardenId }, newSetting);
         }
 
         [HttpPut]
         public IActionResult Update(Setting setting)
         {
             if (setting.GardenId <= 0)
-                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+                return BadRequest(ReturnMessage.IdIsMandatory);
             if (_settingRepository.GetById(setting.GardenId) == null)
-                return NotFound(new { Message = ReturnMessage.SettingNotFound });
+                return NotFound(ReturnMessage.SettingNotFound);
             return Ok(_settingRepository.Update(setting));
         }
 
@@ -48,11 +48,11 @@ namespace HealthyGarden.Api.Controllers
         public IActionResult Delete(int id)
         {
             if (id <= 0)
-                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+                return BadRequest(ReturnMessage.IdIsMandatory);
             if (_settingRepository.GetById(id) == null)
-                return NotFound(new { Message = ReturnMessage.SettingNotFound });
+                return NotFound(ReturnMessage.SettingNotFound);
             _settingRepository.Delete(id);
-            return Ok();
+            return Ok(ReturnMessage.SuccessfullyDeleted);
         }
     }
 }

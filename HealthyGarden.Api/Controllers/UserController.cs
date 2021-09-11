@@ -27,10 +27,10 @@ namespace HealthyGarden.Api.Controllers
         public IActionResult Get(int id)
         {
             if (id <= 0)
-                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+                return BadRequest(ReturnMessage.IdIsMandatory);
             var user = _userRepository.GetById(id);
             if (user == null)
-                return NotFound(new { Message = ReturnMessage.UserNotFound });
+                return NotFound(ReturnMessage.UserNotFound);
             return Ok(user);
         }
 
@@ -45,9 +45,9 @@ namespace HealthyGarden.Api.Controllers
         public IActionResult Update(User user)
         {
             if (user.Id <= 0)
-                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+                return BadRequest(ReturnMessage.IdIsMandatory);
             if (_userRepository.GetById(user.Id) == null)
-                return NotFound(new { Message = ReturnMessage.UserNotFound });
+                return NotFound(ReturnMessage.UserNotFound);
             return Ok(_userRepository.Update(user));
         }
 
@@ -55,11 +55,11 @@ namespace HealthyGarden.Api.Controllers
         public IActionResult Delete(int id)
         {
             if (id <= 0)
-                return BadRequest(new { Message = ReturnMessage.IdIsMandatory });
+                return BadRequest(ReturnMessage.IdIsMandatory);
             if (_userRepository.GetById(id) == null)
-                return NotFound(new { Message = ReturnMessage.UserNotFound });
+                return NotFound(ReturnMessage.UserNotFound);
             _userRepository.Delete(id);
-            return Ok();
+            return Ok(ReturnMessage.SuccessfullyDeleted);
         }
     }
 }
