@@ -24,7 +24,8 @@ namespace HealthyGarden.Infrastructure.Repository
                 connection.Open();
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", entity.UserId, DbType.Int32);
-                parameter.Add("StatusId", entity.StatusId, DbType.Int32);
+                parameter.Add("TemperatureStatus", entity.TemperatureStatus, DbType.Int16);
+                parameter.Add("MoistureStatus", entity.MoistureStatus, DbType.Int16);
                 parameter.Add("Name", entity.Name, DbType.AnsiString, size: 40);
                 parameter.Add("Description", entity.Description, DbType.AnsiString, size: 150);
                 parameter.Add("NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -49,7 +50,7 @@ namespace HealthyGarden.Infrastructure.Repository
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute("p_HG_UpdateGardenByID", new { entity.Id, entity.StatusId, entity.Name, entity.Description }, 
+                connection.Execute("p_HG_UpdateGardenByID", new { entity.Id, entity.TemperatureStatus, entity.MoistureStatus, entity.Name, entity.Description }, 
                     commandType: CommandType.StoredProcedure);
                 return entity;
             }

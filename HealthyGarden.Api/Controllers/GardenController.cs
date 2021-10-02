@@ -2,7 +2,6 @@
 using HealthyGarden.Api.Constants;
 using Microsoft.AspNetCore.Mvc;
 using HealthyGarden.Domain.Entities;
-using HealthyGarden.Domain.Entities.Enum;
 using HealthyGarden.Domain.Interfaces;
 
 namespace HealthyGarden.Api.Controllers
@@ -30,32 +29,39 @@ namespace HealthyGarden.Api.Controllers
         }
 
         /// <param name="garden">
-        /// No parâmetro StatusId, escolha entre as opções:
-        /// 1 - Umidade	Baixa
+        /// No parâmetro MoistureStatus, escolha entre as opções:
+        /// 1 - Umidade Baixa
         /// 2 -	Umidade	Alta
         /// 3 -	Umidade	Neutra
-        /// 4 -	Temperatura	Alta
-        /// 5 -	Temperatura	Baixa
-        /// 6 -	Temperatura	Neutra
+        /// No parâmetro TemperatureStatus, escolha entre as opções:
+        /// 1 -	Temperatura	Alta
+        /// 2 -	Temperatura	Baixa
+        /// 3 -	Temperatura	Neutra
         /// </param>
         [HttpPost]
         public IActionResult Create(Garden garden)
         {
-            if (!StatusExists(garden.StatusId))
-                return NotFound(ReturnMessage.StatusNotExist);
+            if (!StatusExists(garden.MoistureStatus))
+                return NotFound(ReturnMessage.MoistureStatusNotExist);
+
+            if (!StatusExists(garden.TemperatureStatus))
+                return NotFound(ReturnMessage.TemperatureStatusNotExist);
+
 
             var newGarden = _gardenRepository.Insert(garden);
             return CreatedAtAction("Get", new { newGarden.Id }, newGarden);
         }
 
+
         /// <param name="garden">
-        /// No parâmetro StatusId, escolha entre as opções:
-        /// 1 - Umidade	Baixa
+        /// No parâmetro MoistureStatus, escolha entre as opções:
+        /// 1 - Umidade Baixa
         /// 2 -	Umidade	Alta
         /// 3 -	Umidade	Neutra
-        /// 4 -	Temperatura	Alta
-        /// 5 -	Temperatura	Baixa
-        /// 6 -	Temperatura	Neutra
+        /// No parâmetro TemperatureStatus, escolha entre as opções:
+        /// 1 -	Temperatura	Alta
+        /// 2 -	Temperatura	Baixa
+        /// 3 -	Temperatura	Neutra
         /// </param>
         [HttpPut]
         public IActionResult Update(Garden garden)
@@ -63,8 +69,11 @@ namespace HealthyGarden.Api.Controllers
             if (garden.Id <= 0)
                 return BadRequest(ReturnMessage.IdIsMandatory);
 
-            if (!StatusExists(garden.StatusId))
-                return NotFound(ReturnMessage.StatusNotExist);
+            if (!StatusExists(garden.MoistureStatus))
+                return NotFound(ReturnMessage.MoistureStatusNotExist);
+
+            if (!StatusExists(garden.TemperatureStatus))
+                return NotFound(ReturnMessage.TemperatureStatusNotExist);
 
             if (_gardenRepository.GetById(garden.Id) == null)
                 return NotFound(ReturnMessage.GardenNotFound);
@@ -83,6 +92,6 @@ namespace HealthyGarden.Api.Controllers
             return Ok(ReturnMessage.SuccessfullyDeleted);
         }
 
-        private bool StatusExists(Status status) => Enum.IsDefined(typeof(Status), status);
+        private bool StatusExists<T>(T status) => Enum.IsDefined(typeof(T), status);
     }
 }

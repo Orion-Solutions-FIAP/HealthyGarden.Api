@@ -11,7 +11,11 @@ namespace HealthyGarden.Domain.Entities
         [Required]
         public int UserId { get; set; }
         [Required]
-        public Status StatusId { get; set; }
+        public MoistureStatus MoistureStatus { get; set; }
+
+        [Required]
+        public TemperatureStatus TemperatureStatus { get; set; }
+
         [Required]
         public string Name { get; set; }
         [Required]
