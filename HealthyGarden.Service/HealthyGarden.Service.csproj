@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HealthyGarden.Domain\HealthyGarden.Domain.csproj" />
+    <ProjectReference Include="..\HealthyGarden.Infrastructure\HealthyGarden.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

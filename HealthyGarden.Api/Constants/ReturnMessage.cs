@@ -8,5 +8,7 @@
         public static object IdIsMandatory => new { Message = "Id is mandatory" };
         public static object StatusNotExist => new { Message = "Status does not exist" };
         public static object SuccessfullyDeleted => new { Message = "Successfully deleted" };
+        public static object WrongPassword => new { Message = "Wrong Password" };
+
     }
 }

@@ -4,5 +4,7 @@ namespace HealthyGarden.Domain.Interfaces
     public interface IUserRepository : IRepositoryBase<User>
     {
         int GetNumberOfUsers();
+        User GetByEmail(string email);
+        User GetByName(string name);
     }
 }

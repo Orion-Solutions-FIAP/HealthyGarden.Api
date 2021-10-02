@@ -1,7 +1,12 @@
-﻿using HealthyGarden.Api.Constants;
+﻿using System.Threading.Tasks;
+using HealthyGarden.Api.Constants;
 using Microsoft.AspNetCore.Mvc;
 using HealthyGarden.Domain.Entities;
 using HealthyGarden.Domain.Interfaces;
+using HealthyGarden.Infrastructure.Enum;
+using HealthyGarden.Service.Interfaces;
+using HealthyGarden.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HealthyGarden.Api.Controllers
 {
@@ -10,10 +15,35 @@ namespace HealthyGarden.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserService userService, IUserRepository userRepository)
         {
             _userRepository = userRepository;
+            _userService = userService;
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] User user)
+        {
+            var authStatus = _userService.ValidateUser(user);
+
+            if (authStatus == AuthStatus.UserNotFound)
+                return NotFound(ReturnMessage.UserNotFound);
+            if (authStatus == AuthStatus.WrongPassword)
+                return BadRequest(ReturnMessage.WrongPassword);
+
+            var token = TokenService.GenerateToken(user);
+
+            return Ok(new { user, token });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetByEmail(string email)
+        {
+            return Ok();
         }
 
         [HttpGet]

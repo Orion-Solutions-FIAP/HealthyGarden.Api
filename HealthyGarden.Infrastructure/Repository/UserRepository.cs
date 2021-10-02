@@ -75,5 +75,25 @@ namespace HealthyGarden.Infrastructure.Repository
                 connection.Execute("p_HG_DeleteUserByID", new { Id = id }, commandType: CommandType.StoredProcedure);
             }
         }
+
+        public User GetByEmail(string email)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var user = connection.QueryFirstOrDefault<User>("p_HG_GetUserByEmail", new { Email = email }, commandType: CommandType.StoredProcedure);
+                if (user == null) return null;
+                return user;
+            }
+        }
+
+        public User GetByName(string name)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var user = connection.QueryFirstOrDefault<User>("p_HG_GetUserByName", new { Name = name }, commandType: CommandType.StoredProcedure);
+                if (user == null) return null;
+                return user;
+            }
+        }
     }
 }
