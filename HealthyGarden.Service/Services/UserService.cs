@@ -20,6 +20,9 @@ namespace HealthyGarden.Service.Services
             if (user == null)
                 return AuthStatus.UserNotFound;
 
+            currentUser.Salt = user.Salt;
+            currentUser.EncryptPassword();
+
             if (user.Password != currentUser.Password)
                 return AuthStatus.WrongPassword;
             

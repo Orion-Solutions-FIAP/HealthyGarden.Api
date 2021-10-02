@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using HealthyGarden.Api.Constants;
+﻿using HealthyGarden.Api.Constants;
 using Microsoft.AspNetCore.Mvc;
 using HealthyGarden.Domain.Entities;
 using HealthyGarden.Domain.Interfaces;
@@ -37,7 +36,7 @@ namespace HealthyGarden.Api.Controllers
             return Ok(new { token = TokenService.GenerateToken(user) });
         }
 
-        [HttpGet]
+        [HttpGet("{email}")]
         public IActionResult GetByEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))

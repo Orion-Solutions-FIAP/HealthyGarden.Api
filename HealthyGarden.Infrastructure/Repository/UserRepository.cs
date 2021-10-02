@@ -19,17 +19,20 @@ namespace HealthyGarden.Infrastructure.Repository
 
         public User Insert(User entity)
         {
+            entity.GenerateSalt();
+            entity.EncryptPassword();
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var parameter = new DynamicParameters();
                 parameter.Add("Name",entity.Name, DbType.AnsiString,size:40);
                 parameter.Add("Email", entity.Email, DbType.AnsiString,size:60);
-                parameter.Add("Password", entity.Password, DbType.AnsiString, size: 40);
+                parameter.Add("Password", entity.Password, DbType.AnsiString, size: 60);
+                parameter.Add("Salt", entity.Salt, DbType.AnsiString, size: 200);
                 parameter.Add("NewId",dbType:DbType.Int32, direction:ParameterDirection.Output);
                 connection.Execute("p_HG_InsertUser", parameter, commandType: CommandType.StoredProcedure);
                 entity.Id = parameter.Get<int>("NewId");
-                entity.Password = null;
                 return entity;
             }
         }
@@ -41,7 +44,6 @@ namespace HealthyGarden.Infrastructure.Repository
                 connection.Open();
                 var user = connection.QueryFirstOrDefault<User>("p_HG_GetUserByID", new { Id = id }, commandType: CommandType.StoredProcedure);
                 if (user == null) return null;
-                user.Password = null;
                 return user;
             }
         }
@@ -57,12 +59,14 @@ namespace HealthyGarden.Infrastructure.Repository
 
         public User Update(User entity)
         {
+            entity.GenerateSalt();
+            entity.EncryptPassword();
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Execute("p_HG_UpdateUserByID", new { entity.Id, entity.Name, entity.Email, entity.Password},
+                connection.Execute("p_HG_UpdateUserByID", new { entity.Id, entity.Name, entity.Email, entity.Password, entity.Salt},
                     commandType: CommandType.StoredProcedure);
-                entity.Password = null;
                 return entity;
             }
         }

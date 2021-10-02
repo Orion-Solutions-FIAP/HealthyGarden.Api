@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HealthyGarden.Domain.Helpers;
+using System;
 
 namespace HealthyGarden.Domain.Entities
 {
@@ -9,6 +10,15 @@ namespace HealthyGarden.Domain.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string Salt { get; set; }
-        public string Hash { get; set; }
+
+        public void GenerateSalt()
+        {
+            Salt = CryptographyHelper.GenerateSalt();
+        }
+
+        public void EncryptPassword()
+        {
+            Password = CryptographyHelper.EncryptPassword(Password, Salt);
+        }
     }
 }
