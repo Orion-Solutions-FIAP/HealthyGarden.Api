@@ -83,13 +83,6 @@ namespace HealthyGarden.Api.Controllers
             return Ok(ReturnMessage.SuccessfullyDeleted);
         }
 
-        [HttpGet]
-        [Route("historic")]
-        public IActionResult GetHistoric()
-        {
-            return Ok("Under development :B");
-        }
-
         private bool StatusExists(Status status) => Enum.IsDefined(typeof(Status), status);
     }
 }

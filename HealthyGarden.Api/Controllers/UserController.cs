@@ -25,7 +25,7 @@ namespace HealthyGarden.Api.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] User user)
+        public IActionResult Login([FromBody] User user)
         {
             var authStatus = _userService.ValidateUser(user);
 
@@ -34,16 +34,21 @@ namespace HealthyGarden.Api.Controllers
             if (authStatus == AuthStatus.WrongPassword)
                 return BadRequest(ReturnMessage.WrongPassword);
 
-            var token = TokenService.GenerateToken(user);
-
-            return Ok(new { user, token });
+            return Ok(new { token = TokenService.GenerateToken(user) });
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult GetByEmail(string email)
         {
-            return Ok();
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest();
+            
+            var user = _userRepository.GetByEmail(email);
+            
+            if (user == null)
+                return NotFound(ReturnMessage.UserNotFound);
+
+            return Ok(user);
         }
 
         [HttpGet]

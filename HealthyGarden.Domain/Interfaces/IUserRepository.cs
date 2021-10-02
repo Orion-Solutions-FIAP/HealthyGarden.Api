@@ -5,6 +5,5 @@ namespace HealthyGarden.Domain.Interfaces
     {
         int GetNumberOfUsers();
         User GetByEmail(string email);
-        User GetByName(string name);
     }
 }

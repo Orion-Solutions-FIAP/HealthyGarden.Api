@@ -88,6 +88,7 @@ namespace HealthyGarden.Api
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGardenRepository, GardenRepository>();
             services.AddScoped<ISettingRepository, SettingRepository>();
+            services.AddScoped<IHistoricRepository, HistoricRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

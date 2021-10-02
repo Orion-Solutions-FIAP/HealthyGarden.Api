@@ -85,15 +85,5 @@ namespace HealthyGarden.Infrastructure.Repository
                 return user;
             }
         }
-
-        public User GetByName(string name)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var user = connection.QueryFirstOrDefault<User>("p_HG_GetUserByName", new { Name = name }, commandType: CommandType.StoredProcedure);
-                if (user == null) return null;
-                return user;
-            }
-        }
     }
 }
