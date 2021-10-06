@@ -45,6 +45,16 @@ namespace HealthyGarden.Infrastructure.Repository
             }
         }
 
+        public Garden GetByUserId(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var garden = connection.QueryFirstOrDefault<Garden>("p_HG_GetGardenByIdUser", new { Id = userId }, commandType: CommandType.StoredProcedure);
+                return garden;
+            }
+        }
+
         public Garden Update(Garden entity)
         {
             using (var connection = new SqlConnection(_connectionString))

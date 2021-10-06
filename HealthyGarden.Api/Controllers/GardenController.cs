@@ -28,6 +28,17 @@ namespace HealthyGarden.Api.Controllers
             return Ok(garden);
         }
 
+        [HttpGet("user/{userId:int}")]
+        public IActionResult GetUser(int userId)
+        {
+            if (userId <= 0)
+                return BadRequest(ReturnMessage.IdIsMandatory);
+            var garden = _gardenRepository.GetByUserId(userId);
+            if (garden == null)
+                return NotFound(ReturnMessage.GardenNotFound);
+            return Ok(garden);
+        }
+
         /// <param name="garden">
         /// No parâmetro MoistureStatus, escolha entre as opções:
         /// 1 - Umidade Baixa
