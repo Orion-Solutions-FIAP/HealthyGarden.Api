@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
@@ -46,6 +47,15 @@ namespace HealthyGarden.Infrastructure.Repository
         public void Delete(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Historic> GetByGardenId(int gardenId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                return connection.Query<Historic>("p_HG_GetHistoricByIdGarden", new { GardenId = gardenId }, commandType: CommandType.StoredProcedure);
+            }
         }
     }
 }

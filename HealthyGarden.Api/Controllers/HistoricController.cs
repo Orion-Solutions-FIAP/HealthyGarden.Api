@@ -26,5 +26,11 @@ namespace HealthyGarden.Api.Controllers
             _historicRepository.Insert(historic);
             return Ok();
         }
+
+        [HttpGet("garden/{gardenId:int}")]
+        public IActionResult GetByGarden(int gardenId)
+        {
+            return Ok(_historicRepository.GetByGardenId(gardenId));
+        }
     }
 }

@@ -13,8 +13,14 @@ namespace HealthyGarden.Domain.Entities
         [Required]
         public MoistureStatus MoistureStatus { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string MoistureStatusDescription { get; set; }
+
         [Required]
         public TemperatureStatus TemperatureStatus { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string TemperatureStatusDescription { get; set; }
 
         [Required]
         public string Name { get; set; }
